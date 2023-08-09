@@ -118,3 +118,11 @@ urUSMPoolGetInfo(ur_usm_pool_handle_t hPool, ur_usm_pool_info_t propName,
 
   DIE_NO_IMPLEMENTATION;
 }
+
+UR_APIEXPORT ur_result_t UR_APICALL urUSMPoolFree(ur_usm_pool_handle_t hPool,
+                                                  void *Mem) {
+  std::ignore = hPool;
+  std::ignore = Mem;
+
+  DIE_NO_IMPLEMENTATION;
+}

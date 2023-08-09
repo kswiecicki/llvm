@@ -838,6 +838,16 @@ ur_result_t urUSMPoolGetInfo(
   return UR_RESULT_ERROR_UNSUPPORTED_FEATURE;
 }
 
+ur_result_t
+urUSMPoolFree(ur_usm_pool_handle_t Pool, ///< [in] handle of the USM memory pool
+              void *Mem                  ///< [in] pointer to USM memory object
+) {
+  std::ignore = Pool;
+  std::ignore = Mem;
+  urPrint("[UR][L0] %s function not implemented!\n", __FUNCTION__);
+  return UR_RESULT_ERROR_UNSUPPORTED_FEATURE;
+}
+
 // If indirect access tracking is not enabled then this functions just performs
 // zeMemFree. If indirect access tracking is enabled then reference counting is
 // performed.

@@ -239,6 +239,7 @@ urGetUSMProcAddrTable(ur_api_version_t version, ur_usm_dditable_t *pDdiTable) {
   pDdiTable->pfnPoolRelease = urUSMPoolRelease;
   pDdiTable->pfnPoolGetInfo = urUSMPoolGetInfo;
   pDdiTable->pfnSharedAlloc = urUSMSharedAlloc;
+  pDdiTable->pfnPoolFree = urUSMPoolFree;
   return UR_RESULT_SUCCESS;
 }
 
