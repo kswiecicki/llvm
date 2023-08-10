@@ -14,6 +14,7 @@
 usm::DisjointPoolAllConfigs InitializeDisjointPoolConfig();
 
 struct ur_usm_pool_handle_t_ : _ur_object {
+  ur_context_handle_t Context;
   bool zeroInit;
 
   usm::DisjointPoolAllConfigs DisjointPoolConfigs =
@@ -112,6 +113,7 @@ protected:
 ur_result_t ZeMemFreeHelper(ur_context_handle_t Context, void *Ptr);
 
 ur_result_t USMFreeHelper(ur_context_handle_t Context, void *Ptr,
-                          bool OwnZeMemHandle = true);
+                          bool OwnZeMemHandle = true,
+                          ur_usm_pool_handle_t Pool = nullptr);
 
 extern const bool UseUSMAllocator;

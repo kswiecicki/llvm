@@ -528,6 +528,19 @@ UR_APIEXPORT ur_result_t UR_APICALL urUSMSharedAlloc(
   return UR_RESULT_SUCCESS;
 }
 
+UR_APIEXPORT ur_result_t UR_APICALL urUSMPoolFree(
+    ur_usm_pool_handle_t Pool, ///< [in] handle of the context object
+    void *Mem                  ///< [in] pointer to USM memory object
+) {
+  auto Context = Pool->Context;
+  ur_platform_handle_t Plt = Context->getPlatform();
+
+  std::scoped_lock<ur_shared_mutex> Lock(
+      IndirectAccessTrackingEnabled ? Plt->ContextsMutex : Context->Mutex);
+
+  return USMFreeHelper(Context, Mem, false, Pool);
+}
+
 UR_APIEXPORT ur_result_t UR_APICALL urUSMFree(
     ur_context_handle_t Context, ///< [in] handle of the context object
     void *Mem                    ///< [in] pointer to USM memory object
@@ -838,16 +851,6 @@ ur_result_t urUSMPoolGetInfo(
   return UR_RESULT_ERROR_UNSUPPORTED_FEATURE;
 }
 
-ur_result_t
-urUSMPoolFree(ur_usm_pool_handle_t Pool, ///< [in] handle of the USM memory pool
-              void *Mem                  ///< [in] pointer to USM memory object
-) {
-  std::ignore = Pool;
-  std::ignore = Mem;
-  urPrint("[UR][L0] %s function not implemented!\n", __FUNCTION__);
-  return UR_RESULT_ERROR_UNSUPPORTED_FEATURE;
-}
-
 // If indirect access tracking is not enabled then this functions just performs
 // zeMemFree. If indirect access tracking is enabled then reference counting is
 // performed.
@@ -897,7 +900,7 @@ const bool UseUSMAllocator = ShouldUseUSMAllocator();
 // If indirect access tracking is not enabled then caller must lock Context
 // mutex.
 ur_result_t USMFreeHelper(ur_context_handle_t Context, void *Ptr,
-                          bool OwnZeMemHandle) {
+                          bool OwnZeMemHandle, ur_usm_pool_handle_t Pool) {
   if (!OwnZeMemHandle) {
     // Memory should not be freed
     return UR_RESULT_SUCCESS;
@@ -947,7 +950,9 @@ ur_result_t USMFreeHelper(ur_context_handle_t Context, void *Ptr,
 
   // If memory type is host release from host pool
   if (ZeMemoryAllocationProperties.type == ZE_MEMORY_TYPE_HOST) {
-    auto umfRet = umfPoolFree(Context->HostMemPool.get(), Ptr);
+    auto hPoolInternal =
+        Pool ? Pool->HostMemPool.get() : Context->HostMemPool.get();
+    auto umfRet = umfPoolFree(hPoolInternal, Ptr);
 
     if (IndirectAccessTrackingEnabled)
       UR_CALL(ContextReleaseHelper(Context));
@@ -986,15 +991,40 @@ ur_result_t USMFreeHelper(ur_context_handle_t Context, void *Ptr,
           return umf2urResult(umfRet);
         };
 
+    auto PoolDeallocationHelper =
+        [Context, Pool, Device,
+         Ptr](std::unordered_map<ur_device_handle_t, umf::pool_unique_handle_t>
+                  &PoolMap) {
+          auto It = PoolMap.find(Device);
+          if (It == PoolMap.end())
+            return UR_RESULT_ERROR_INVALID_VALUE;
+
+          // The right pool is found, deallocate the pointer
+          auto umfRet = umfPoolFree(It->second.get(), Ptr);
+
+          if (IndirectAccessTrackingEnabled)
+            UR_CALL(ContextReleaseHelper(Context));
+          return umf2urResult(umfRet);
+        };
+
     switch (ZeMemoryAllocationProperties.type) {
     case ZE_MEMORY_TYPE_SHARED:
       // Distinguish device_read_only allocations since they have own pool.
       SharedReadOnlyAllocsIterator = Context->SharedReadOnlyAllocs.find(Ptr);
+      if (Pool) {
+        return PoolDeallocationHelper(
+            SharedReadOnlyAllocsIterator != Context->SharedReadOnlyAllocs.end()
+                ? Pool->SharedReadOnlyMemPools
+                : Pool->SharedMemPools);
+      }
       return DeallocationHelper(SharedReadOnlyAllocsIterator !=
                                         Context->SharedReadOnlyAllocs.end()
                                     ? Context->SharedReadOnlyMemPools
                                     : Context->SharedMemPools);
     case ZE_MEMORY_TYPE_DEVICE:
+      if (Pool) {
+        return PoolDeallocationHelper(Pool->DeviceMemPools);
+      }
       return DeallocationHelper(Context->DeviceMemPools);
     default:
       // Handled below
