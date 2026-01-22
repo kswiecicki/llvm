@@ -11,12 +11,12 @@
 
 #include <unified-runtime/ur_api.h>
 
-#include "../platform.hpp"
-#include "../ur_interface_loader.hpp"
+#include "../common/platform.hpp"
+#include "ur_interface_loader.hpp"
 #include "context.hpp"
 #include "event.hpp"
 
-namespace ur::level_zero {
+namespace ur::level_zero::v2 {
 
 namespace {
 
@@ -92,4 +92,4 @@ ur_result_t urIPCOpenEventHandleExp(ur_context_handle_t hContext,
   return exceptionToResult(std::current_exception());
 }
 
-} // namespace ur::level_zero
+} // namespace ur::level_zero::v2

@@ -7,11 +7,12 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include "../device.hpp"
+#include "../common/device.hpp"
+#include "../common/platform.hpp"
 #include "context.hpp"
 #include "logger/ur_logger.hpp"
 
-namespace ur::level_zero {
+namespace ur::level_zero::v2 {
 
 // Validates that two devices are compatible for P2P operations: both must have
 // an assigned Id, must belong to the same platform (i.e. share the same device
@@ -125,4 +126,4 @@ ur_result_t urUsmP2PPeerAccessGetInfoExp(ur_device_handle_t commandDevice,
 
   return ReturnValue(propertyValue);
 }
-} // namespace ur::level_zero
+} // namespace ur::level_zero::v2
