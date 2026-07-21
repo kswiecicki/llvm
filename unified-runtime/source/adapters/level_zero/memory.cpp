@@ -802,9 +802,9 @@ ur_result_t urEnqueueMemBufferFill(
 
   char *ZeHandleDst = nullptr;
   ur_buffer *UrBuffer = reinterpret_cast<ur_buffer *>(BufferOpque);
-  UR_CALL(UrBuffer->getZeHandle(
-      ZeHandleDst, ur_mem_handle_t_::write_only,
-      Queue->Device, EventWaitListInternal, NumEventsInWaitList));
+  UR_CALL(UrBuffer->getZeHandle(ZeHandleDst, ur_mem_handle_t_::write_only,
+                                Queue->Device, EventWaitListInternal,
+                                NumEventsInWaitList));
   return enqueueMemFillHelper(
       UR_COMMAND_MEM_BUFFER_FILL, Queue, ZeHandleDst + Offset,
       Pattern,     // It will be interpreted as an 8-bit value,

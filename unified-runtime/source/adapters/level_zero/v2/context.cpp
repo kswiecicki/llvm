@@ -41,9 +41,9 @@ static bool isCompletePlatformDeviceList(uint32_t deviceCount,
   sortAndUnique(requestedDevices);
 
   uint32_t platformDeviceCount = 0;
-  ur_result_t result = ur::level_zero::urDeviceGet(
-      common_cast(hPlatform), UR_DEVICE_TYPE_ALL, 0, nullptr,
-      &platformDeviceCount);
+  ur_result_t result =
+      ur::level_zero::urDeviceGet(common_cast(hPlatform), UR_DEVICE_TYPE_ALL, 0,
+                                  nullptr, &platformDeviceCount);
   if (result != UR_RESULT_SUCCESS || platformDeviceCount == 0) {
     return false;
   }
@@ -235,8 +235,8 @@ ur_result_t urContextCreate(uint32_t deviceCount,
 
   if (isCompletePlatformDeviceList(deviceCount, phDevices)) {
     if (auto zeContext = zeDriverGetDefaultContext(hPlatform->ZeDriver)) {
-      *phContext =
-          new v2::ur_context_handle_t_(zeContext, deviceCount, phDevices, false);
+      *phContext = new v2::ur_context_handle_t_(zeContext, deviceCount,
+                                                phDevices, false);
       {
         std::scoped_lock<ur_shared_mutex> Lock(hPlatform->ContextsMutex);
         hPlatform->Contexts.push_back(v2_cast(*phContext));

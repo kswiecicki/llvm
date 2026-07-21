@@ -8,11 +8,11 @@
 //===----------------------------------------------------------------------===//
 
 #include "shared_helpers.hpp"
-#include <ze_api.h>
 #include "logger/ur_logger.hpp"
 #include <cstring>
 #include <mutex>
 #include <umf_helpers.hpp>
+#include <ze_api.h>
 
 std::mutex ur::level_zero::ZeCall::GlobalLock;
 

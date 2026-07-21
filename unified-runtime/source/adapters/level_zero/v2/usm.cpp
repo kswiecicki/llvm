@@ -447,8 +447,8 @@ void ur_usm_pool_handle_t_::changeResidentDevice(ur_device_handle_t hDevice,
         common_cast(desc.hDevice)->ZeDevice == hDevice->ZeDevice) {
       UR_LOG(INFO, "found {} of srcDevice:{} valid to {} peerDevice:{}",
              logger::makeStringFromStreamable(desc),
-             common_cast(desc.hDevice)->Id.value(),
-             isAdding ? "add" : "remove", peerDevice->Id.value());
+             common_cast(desc.hDevice)->Id.value(), isAdding ? "add" : "remove",
+             peerDevice->Id.value());
       umf_memory_provider_handle_t hProvider;
       umf_result_t getProviderResult =
           umfPoolGetMemoryProvider(pool->umfPool.get(), &hProvider);

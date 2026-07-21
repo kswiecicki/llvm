@@ -27,7 +27,8 @@ kernel_command_handle::kernel_command_handle(
   // Add alternative kernels if provided
   if (kernelAlternatives) {
     for (size_t i = 0; i < numKernelAlternatives; i++) {
-      ddiTableOf(kernelAlternatives[i])->Kernel.pfnRetain(kernelAlternatives[i]);
+      ddiTableOf(kernelAlternatives[i])
+          ->Kernel.pfnRetain(kernelAlternatives[i]);
       validKernelHandles.insert(kernelAlternatives[i]);
     }
   }

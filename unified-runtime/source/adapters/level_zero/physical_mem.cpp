@@ -90,10 +90,11 @@ ur_result_t urPhysicalMemGetInfo(::ur_physical_mem_handle_t hPhysicalMemOpque,
   return UR_RESULT_SUCCESS;
 }
 
-ur_result_t urIPCGetPhysMemHandleExp(::ur_context_handle_t /* hContext */,
-                                     ::ur_physical_mem_handle_t /* hPhysMem */,
-                                     void ** /* ppIPCPhysMemHandleData */,
-                                     size_t * /* pIPCPhysMemHandleDataSizeRet */) {
+ur_result_t
+urIPCGetPhysMemHandleExp(::ur_context_handle_t /* hContext */,
+                         ::ur_physical_mem_handle_t /* hPhysMem */,
+                         void ** /* ppIPCPhysMemHandleData */,
+                         size_t * /* pIPCPhysMemHandleDataSizeRet */) {
   UR_LOG_LEGACY(ERR,
                 logger::LegacyMessage("[UR][L0] {} function not implemented!"),
                 "{} function not implemented!", __FUNCTION__);
@@ -108,20 +109,21 @@ ur_result_t urIPCPutPhysMemHandleExp(::ur_context_handle_t /* hContext */,
   return UR_RESULT_ERROR_UNSUPPORTED_FEATURE;
 }
 
-ur_result_t urIPCOpenPhysMemHandleExp(
-    ::ur_context_handle_t /* hContext */, ::ur_device_handle_t /* hDevice */,
-    const void * /* pIPCPhysMemHandleData */,
-    size_t /* ipcPhysMemHandleDataSize */,
-    ::ur_physical_mem_handle_t * /* phPhysMem */) {
+ur_result_t
+urIPCOpenPhysMemHandleExp(::ur_context_handle_t /* hContext */,
+                          ::ur_device_handle_t /* hDevice */,
+                          const void * /* pIPCPhysMemHandleData */,
+                          size_t /* ipcPhysMemHandleDataSize */,
+                          ::ur_physical_mem_handle_t * /* phPhysMem */) {
   UR_LOG_LEGACY(ERR,
                 logger::LegacyMessage("[UR][L0] {} function not implemented!"),
                 "{} function not implemented!", __FUNCTION__);
   return UR_RESULT_ERROR_UNSUPPORTED_FEATURE;
 }
 
-ur_result_t urIPCClosePhysMemHandleExp(
-    ::ur_context_handle_t /* hContext */,
-    ::ur_physical_mem_handle_t /* hPhysMem */) {
+ur_result_t
+urIPCClosePhysMemHandleExp(::ur_context_handle_t /* hContext */,
+                           ::ur_physical_mem_handle_t /* hPhysMem */) {
   UR_LOG_LEGACY(ERR,
                 logger::LegacyMessage("[UR][L0] {} function not implemented!"),
                 "{} function not implemented!", __FUNCTION__);

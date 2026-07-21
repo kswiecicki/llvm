@@ -12,9 +12,9 @@
 #include <unified-runtime/ur_api.h>
 
 #include "../common/platform.hpp"
-#include "ur_interface_loader.hpp"
 #include "context.hpp"
 #include "event.hpp"
+#include "ur_interface_loader.hpp"
 
 namespace ur::level_zero::v2 {
 

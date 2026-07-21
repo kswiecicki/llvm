@@ -39,24 +39,26 @@ ur_result_t urEventSetCallback(::ur_event_handle_t /*hEventOpque*/,
   return UR_RESULT_ERROR_UNSUPPORTED_FEATURE;
 }
 
-ur_result_t UR_APICALL urUSMPoolGetDevicePoolExp(
-    ::ur_context_handle_t /*hContextOpque*/, ::ur_device_handle_t /*hDeviceOpque*/,
-    ::ur_usm_pool_handle_t * /*pPoolOpque*/) {
+ur_result_t UR_APICALL
+urUSMPoolGetDevicePoolExp(::ur_context_handle_t /*hContextOpque*/,
+                          ::ur_device_handle_t /*hDeviceOpque*/,
+                          ::ur_usm_pool_handle_t * /*pPoolOpque*/) {
   UR_LOG(ERR, "{} function not implemented!", __FUNCTION__);
   return UR_RESULT_ERROR_UNSUPPORTED_FEATURE;
 }
 
-ur_result_t UR_APICALL urUSMPoolSetDevicePoolExp(
-    ::ur_context_handle_t /*hContextOpque*/, ::ur_device_handle_t /*hDeviceOpque*/,
-    ::ur_usm_pool_handle_t /*hPoolOpque*/) {
+ur_result_t UR_APICALL
+urUSMPoolSetDevicePoolExp(::ur_context_handle_t /*hContextOpque*/,
+                          ::ur_device_handle_t /*hDeviceOpque*/,
+                          ::ur_usm_pool_handle_t /*hPoolOpque*/) {
   UR_LOG(ERR, "{} function not implemented!", __FUNCTION__);
   return UR_RESULT_ERROR_UNSUPPORTED_FEATURE;
 }
 
-ur_result_t UR_APICALL urUSMPoolTrimToExp(::ur_context_handle_t /*hContextOpque*/,
-                                          ::ur_device_handle_t /*hDeviceOpque*/,
-                                          ::ur_usm_pool_handle_t /*hPoolOpque*/,
-                                          size_t /*minBytesToKeep*/) {
+ur_result_t UR_APICALL urUSMPoolTrimToExp(
+    ::ur_context_handle_t /*hContextOpque*/,
+    ::ur_device_handle_t /*hDeviceOpque*/,
+    ::ur_usm_pool_handle_t /*hPoolOpque*/, size_t /*minBytesToKeep*/) {
   UR_LOG(ERR, "{} function not implemented!", __FUNCTION__);
   return UR_RESULT_ERROR_UNSUPPORTED_FEATURE;
 }
