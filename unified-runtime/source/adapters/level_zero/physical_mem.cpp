@@ -1,4 +1,4 @@
-//===---------------- physical_mem.cpp - Level Zero Adapter ---------------===//
+//===--------- physical_mem.cpp - Level Zero Adapter ----------------------===//
 //
 //
 // Part of the LLVM Project, under the Apache License v2.0 with LLVM
@@ -7,11 +7,11 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include "physical_mem.hpp"
-#include "device.hpp"
-#include "interfaces.hpp"
+#include "common.hpp"
+#include "ur_interface_loader.hpp"
+#include "ur_level_zero.hpp"
 
-namespace ur::level_zero {
+namespace ur::level_zero::v1 {
 
 ur_result_t urPhysicalMemCreate(
     ::ur_context_handle_t hContextOpque, ::ur_device_handle_t hDeviceOpque,
@@ -90,25 +90,42 @@ ur_result_t urPhysicalMemGetInfo(::ur_physical_mem_handle_t hPhysicalMemOpque,
   return UR_RESULT_SUCCESS;
 }
 
-ur_result_t urIPCGetPhysMemHandleExp(ur_context_handle_t,
-                                     ur_physical_mem_handle_t, void **,
-                                     size_t *) {
+ur_result_t urIPCGetPhysMemHandleExp(::ur_context_handle_t /* hContext */,
+                                     ::ur_physical_mem_handle_t /* hPhysMem */,
+                                     void ** /* ppIPCPhysMemHandleData */,
+                                     size_t * /* pIPCPhysMemHandleDataSizeRet */) {
+  UR_LOG_LEGACY(ERR,
+                logger::LegacyMessage("[UR][L0] {} function not implemented!"),
+                "{} function not implemented!", __FUNCTION__);
   return UR_RESULT_ERROR_UNSUPPORTED_FEATURE;
 }
 
-ur_result_t urIPCPutPhysMemHandleExp(ur_context_handle_t, const void *) {
+ur_result_t urIPCPutPhysMemHandleExp(::ur_context_handle_t /* hContext */,
+                                     const void * /* pIPCPhysMemHandleData */) {
+  UR_LOG_LEGACY(ERR,
+                logger::LegacyMessage("[UR][L0] {} function not implemented!"),
+                "{} function not implemented!", __FUNCTION__);
   return UR_RESULT_ERROR_UNSUPPORTED_FEATURE;
 }
 
-ur_result_t urIPCOpenPhysMemHandleExp(ur_context_handle_t, ur_device_handle_t,
-                                      const void *, size_t,
-                                      ur_physical_mem_handle_t *) {
+ur_result_t urIPCOpenPhysMemHandleExp(
+    ::ur_context_handle_t /* hContext */, ::ur_device_handle_t /* hDevice */,
+    const void * /* pIPCPhysMemHandleData */,
+    size_t /* ipcPhysMemHandleDataSize */,
+    ::ur_physical_mem_handle_t * /* phPhysMem */) {
+  UR_LOG_LEGACY(ERR,
+                logger::LegacyMessage("[UR][L0] {} function not implemented!"),
+                "{} function not implemented!", __FUNCTION__);
   return UR_RESULT_ERROR_UNSUPPORTED_FEATURE;
 }
 
-ur_result_t urIPCClosePhysMemHandleExp(ur_context_handle_t,
-                                       ur_physical_mem_handle_t) {
+ur_result_t urIPCClosePhysMemHandleExp(
+    ::ur_context_handle_t /* hContext */,
+    ::ur_physical_mem_handle_t /* hPhysMem */) {
+  UR_LOG_LEGACY(ERR,
+                logger::LegacyMessage("[UR][L0] {} function not implemented!"),
+                "{} function not implemented!", __FUNCTION__);
   return UR_RESULT_ERROR_UNSUPPORTED_FEATURE;
 }
 
-} // namespace ur::level_zero
+} // namespace ur::level_zero::v1

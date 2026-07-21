@@ -168,29 +168,6 @@ inline ur_result_t urSamplerCreateWithNativeHandle(
       NativeSampler, Context, Properties, Sampler);
 }
 inline ur_result_t
-urPhysicalMemCreate(::ur_context_handle_t hContext,
-                    ::ur_device_handle_t hDevice, size_t size,
-                    const ur_physical_mem_properties_t *pProperties,
-                    ::ur_physical_mem_handle_t *phPhysicalMem) {
-  return ::ur::level_zero::urPhysicalMemCreate(hContext, hDevice, size,
-                                               pProperties, phPhysicalMem);
-}
-inline ur_result_t
-urPhysicalMemRetain(::ur_physical_mem_handle_t hPhysicalMem) {
-  return ::ur::level_zero::urPhysicalMemRetain(hPhysicalMem);
-}
-inline ur_result_t
-urPhysicalMemRelease(::ur_physical_mem_handle_t hPhysicalMem) {
-  return ::ur::level_zero::urPhysicalMemRelease(hPhysicalMem);
-}
-inline ur_result_t urPhysicalMemGetInfo(::ur_physical_mem_handle_t hPhysicalMem,
-                                        ur_physical_mem_info_t propName,
-                                        size_t propSize, void *pPropValue,
-                                        size_t *pPropSizeRet) {
-  return ::ur::level_zero::urPhysicalMemGetInfo(
-      hPhysicalMem, propName, propSize, pPropValue, pPropSizeRet);
-}
-inline ur_result_t
 urProgramCreateWithIL(::ur_context_handle_t hContext, const void *pIL,
                       size_t length, const ur_program_properties_t *pProperties,
                       ::ur_program_handle_t *phProgram) {

@@ -8,8 +8,6 @@
 //===----------------------------------------------------------------------===//
 #pragma once
 
-#include <level_zero/ze_api.h>
-
 #include "device.hpp"
 #include "interfaces.hpp"
 #include "unified-runtime/ur_api.h"

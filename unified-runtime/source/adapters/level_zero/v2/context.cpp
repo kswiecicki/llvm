@@ -42,15 +42,16 @@ static bool isCompletePlatformDeviceList(uint32_t deviceCount,
 
   uint32_t platformDeviceCount = 0;
   ur_result_t result = ur::level_zero::urDeviceGet(
-      hPlatform, UR_DEVICE_TYPE_ALL, 0, nullptr, &platformDeviceCount);
+      common_cast(hPlatform), UR_DEVICE_TYPE_ALL, 0, nullptr,
+      &platformDeviceCount);
   if (result != UR_RESULT_SUCCESS || platformDeviceCount == 0) {
     return false;
   }
 
   std::vector<ur_device_handle_t> platformDevices(platformDeviceCount);
-  result = ur::level_zero::urDeviceGet(hPlatform, UR_DEVICE_TYPE_ALL,
-                                       platformDeviceCount,
-                                       platformDevices.data(), nullptr);
+  result = ur::level_zero::urDeviceGet(
+      common_cast(hPlatform), UR_DEVICE_TYPE_ALL, platformDeviceCount,
+      common_cast(platformDevices.data()), nullptr);
   if (result != UR_RESULT_SUCCESS) {
     return false;
   }

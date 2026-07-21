@@ -8,7 +8,7 @@
 //===----------------------------------------------------------------------===//
 
 #include "shared_helpers.hpp"
-#include <level_zero/ze_api.h>
+#include <ze_api.h>
 #include "logger/ur_logger.hpp"
 #include <cstring>
 #include <mutex>

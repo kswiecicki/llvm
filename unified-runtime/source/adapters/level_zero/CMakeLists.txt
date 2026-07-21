@@ -16,7 +16,6 @@ if(UR_BUILD_ADAPTER_L0 OR UR_BUILD_ADAPTER_L0_V2)
         ${CMAKE_CURRENT_SOURCE_DIR}/common/virtual_mem.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/common/sampler.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/common/enqueued_pool.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/common/physical_mem.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/common/memory_export.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/../../ur/ur.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/common/helpers/kernel_helpers.cpp
@@ -71,7 +70,7 @@ if(UR_BUILD_ADAPTER_L0 OR UR_BUILD_ADAPTER_L0_V2)
 endif()
 
 if(UR_STATIC_ADAPTER_L0 OR UR_STATIC_ADAPTER_L0_V2)
-    set(ADAPTER_L0_TARGETS_TO_INSTALL ur_umf LevelZeroLoader LevelZeroLoader-Headers ComputeRuntimeLevelZero-Headers)
+    set(ADAPTER_L0_TARGETS_TO_INSTALL LevelZeroLoader LevelZeroLoader-Headers ComputeRuntimeLevelZero-Headers)
     # 'utils' target from 'level-zero-loader' includes path which is prefixed
     # in the source directory, this breaks the installation of 'utils' target.
     if(TARGET level_zero_utils)
@@ -128,6 +127,7 @@ if(UR_BUILD_ADAPTER_L0)
         ${CMAKE_CURRENT_SOURCE_DIR}/queue.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/image.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/graph.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/physical_mem.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/ur_level_zero.cpp
     )
     install_ur_library(ur_adapter_level_zero)
@@ -139,22 +139,6 @@ if(UR_BUILD_ADAPTER_L0)
     target_compile_definitions(ur_adapter_level_zero PUBLIC UR_STATIC_LEVEL_ZERO)
     if(UR_STATIC_ADAPTER_L0)
         target_compile_definitions(ur_adapter_level_zero PUBLIC UR_STATIC_ADAPTER_LEVEL_ZERO)
-        set(ADAPTER_L0_TARGETS_TO_INSTALL LevelZeroLoader LevelZeroLoader-Headers ComputeRuntimeLevelZero-Headers)
-        # 'utils' target from 'level-zero-loader' includes path which is prefixed
-        # in the source directory, this breaks the installation of 'utils' target.
-        if(TARGET level_zero_utils)
-          set_target_properties(level_zero_utils PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "")
-          list(APPEND ADAPTER_L0_TARGETS_TO_INSTALL level_zero_utils)
-        endif()
-        if(TARGET ze_loader)
-          list(APPEND ADAPTER_L0_TARGETS_TO_INSTALL ze_loader)
-        endif()
-        install(TARGETS ${ADAPTER_L0_TARGETS_TO_INSTALL}
-            EXPORT ${PROJECT_NAME}-targets
-            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        )
     endif()
 
     # Ensure UR flags are propagated to level zero
@@ -218,6 +202,7 @@ if(UR_BUILD_ADAPTER_L0_V2)
         ${CMAKE_CURRENT_SOURCE_DIR}/v2/graph.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/v2/kernel.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/v2/memory.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/v2/physical_mem.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/v2/lockable.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/v2/queue_api.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/v2/queue_batched.hpp
@@ -237,6 +222,7 @@ if(UR_BUILD_ADAPTER_L0_V2)
         ${CMAKE_CURRENT_SOURCE_DIR}/v2/ipc_event.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/v2/kernel.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/v2/memory.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/v2/physical_mem.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/v2/queue_api.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/v2/queue_batched.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/v2/queue_create.cpp

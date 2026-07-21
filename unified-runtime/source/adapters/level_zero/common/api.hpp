@@ -95,18 +95,6 @@ ur_result_t urSamplerCreateWithNativeHandle(
     const ur_sampler_native_properties_t *Properties,
     ::ur_sampler_handle_t *SamplerOpque);
 
-// Physical memory
-ur_result_t urPhysicalMemCreate(::ur_context_handle_t hContextOpque,
-                                ::ur_device_handle_t hDeviceOpque, size_t size,
-                                const ur_physical_mem_properties_t *pProperties,
-                                ::ur_physical_mem_handle_t *phPhysicalMemOpque);
-ur_result_t urPhysicalMemRetain(::ur_physical_mem_handle_t hPhysicalMemOpque);
-ur_result_t urPhysicalMemRelease(::ur_physical_mem_handle_t hPhysicalMemOpque);
-ur_result_t urPhysicalMemGetInfo(::ur_physical_mem_handle_t hPhysicalMemOpque,
-                                 ur_physical_mem_info_t propName,
-                                 size_t propSize, void *pPropValue,
-                                 size_t *pPropSizeRet);
-
 // Program
 ur_result_t urProgramCreateWithIL(::ur_context_handle_t hContextOpque,
                                   const void *pIL, size_t length,

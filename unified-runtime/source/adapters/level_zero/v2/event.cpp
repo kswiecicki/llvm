@@ -440,14 +440,18 @@ urEventCreateWithNativeHandle(::ur_native_handle_t hNativeEvent,
   return exceptionToResult(std::current_exception());
 }
 
-ur_result_t urEventCreateExp(ur_context_handle_t hContext,
-                             ur_device_handle_t hDevice,
+ur_result_t urEventCreateExp(::ur_context_handle_t hContextOpque,
+                             ::ur_device_handle_t hDeviceOpque,
                              const ur_exp_event_desc_t *pEventDesc,
-                             ur_event_handle_t *phEvent) try {
-  UR_ASSERT(hContext && hDevice, UR_RESULT_ERROR_INVALID_NULL_HANDLE);
-  UR_ASSERT(pEventDesc && phEvent, UR_RESULT_ERROR_INVALID_NULL_POINTER);
+                             ::ur_event_handle_t *phEventOpque) try {
+  UR_ASSERT(hContextOpque && hDeviceOpque, UR_RESULT_ERROR_INVALID_NULL_HANDLE);
+  UR_ASSERT(pEventDesc && phEventOpque, UR_RESULT_ERROR_INVALID_NULL_POINTER);
   UR_ASSERT(!(pEventDesc->flags & UR_EXP_EVENT_FLAGS_MASK),
             UR_RESULT_ERROR_INVALID_ENUMERATION);
+
+  auto hContext = v2_cast(hContextOpque);
+  auto hDevice = common_cast(hDeviceOpque);
+  auto phEvent = v2_cast(phEventOpque);
 
   const v2::event_flags_t flags =
       v2::EVENT_FLAGS_COUNTER |

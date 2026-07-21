@@ -1074,9 +1074,7 @@ ur_result_t urIPCOpenEventHandleExp(::ur_context_handle_t /*hContext*/,
   return UR_RESULT_ERROR_UNSUPPORTED_FEATURE;
 }
 
-} // namespace ur::level_zero::v1
-
-ur_result_t ur::level_zero::v1::ur_event_handle_t_::getOrCreateHostVisibleEvent(
+ur_result_t ur_event_handle_t_::getOrCreateHostVisibleEvent(
     ze_event_handle_t &ZeHostVisibleEvent) {
   auto UrQueue = this->UrQueue;
   std::scoped_lock<ur_shared_mutex, ur_shared_mutex> Lock(UrQueue->Mutex,

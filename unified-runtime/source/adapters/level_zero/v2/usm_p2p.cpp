@@ -70,14 +70,14 @@ static ur_result_t urUsmP2PChangePeerAccessExp(ur_device_handle_t commandDevice,
   // Copy the context list under the mutex and iterate outside the critical
   // section to avoid holding ContextsMutex during potentially heavy
   // changeResidentDevice calls and to reduce deadlock risk.
-  std::list<ur_context_handle_t> Contexts;
+  std::list<::ur_context_handle_t> Contexts;
   {
     std::scoped_lock<ur_shared_mutex> Lock(Platform->ContextsMutex);
     Contexts = Platform->Contexts;
   }
   UR_LOG(INFO, "changing peers in {} contexts", Contexts.size());
   for (auto Context : Contexts) {
-    Context->changeResidentDevice(peerDevice, commandDevice, isAdding);
+    v2_cast(Context)->changeResidentDevice(peerDevice, commandDevice, isAdding);
   }
 
   return UR_RESULT_SUCCESS;

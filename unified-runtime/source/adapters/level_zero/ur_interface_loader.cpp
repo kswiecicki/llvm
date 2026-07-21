@@ -277,7 +277,7 @@ UR_APIEXPORT ur_result_t UR_APICALL urGetEventExpProcAddrTable(
     return result;
   }
 
-  pDdiTable->pfnCreateExp = ur::level_zero::urEventCreateExp;
+  pDdiTable->pfnCreateExp = ur::level_zero::v1::urEventCreateExp;
 
   return result;
 }
@@ -296,7 +296,14 @@ UR_APIEXPORT ur_result_t UR_APICALL urGetGraphExpProcAddrTable(
   pDdiTable->pfnExecutableGraphDestroyExp =
       ur::level_zero::v1::urGraphExecutableGraphDestroyExp;
   pDdiTable->pfnIsEmptyExp = ur::level_zero::v1::urGraphIsEmptyExp;
+  pDdiTable->pfnGetIdExp = ur::level_zero::v1::urGraphGetIdExp;
+  pDdiTable->pfnSetDestructionCallbackExp =
+      ur::level_zero::v1::urGraphSetDestructionCallbackExp;
   pDdiTable->pfnDumpContentsExp = ur::level_zero::v1::urGraphDumpContentsExp;
+  pDdiTable->pfnGetNativeHandleExp =
+      ur::level_zero::v1::urGraphGetNativeHandleExp;
+  pDdiTable->pfnExecutableGraphGetNativeHandleExp =
+      ur::level_zero::v1::urGraphExecutableGraphGetNativeHandleExp;
 
   return result;
 }
@@ -312,6 +319,18 @@ UR_APIEXPORT ur_result_t UR_APICALL urGetIPCExpProcAddrTable(
   pDdiTable->pfnPutMemHandleExp = ur::level_zero::v1::urIPCPutMemHandleExp;
   pDdiTable->pfnOpenMemHandleExp = ur::level_zero::v1::urIPCOpenMemHandleExp;
   pDdiTable->pfnCloseMemHandleExp = ur::level_zero::v1::urIPCCloseMemHandleExp;
+  pDdiTable->pfnGetPhysMemHandleExp =
+      ur::level_zero::v1::urIPCGetPhysMemHandleExp;
+  pDdiTable->pfnPutPhysMemHandleExp =
+      ur::level_zero::v1::urIPCPutPhysMemHandleExp;
+  pDdiTable->pfnOpenPhysMemHandleExp =
+      ur::level_zero::v1::urIPCOpenPhysMemHandleExp;
+  pDdiTable->pfnClosePhysMemHandleExp =
+      ur::level_zero::v1::urIPCClosePhysMemHandleExp;
+  pDdiTable->pfnGetEventHandleExp = ur::level_zero::v1::urIPCGetEventHandleExp;
+  pDdiTable->pfnPutEventHandleExp = ur::level_zero::v1::urIPCPutEventHandleExp;
+  pDdiTable->pfnOpenEventHandleExp =
+      ur::level_zero::v1::urIPCOpenEventHandleExp;
 
   return result;
 }

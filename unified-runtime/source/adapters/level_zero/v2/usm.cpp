@@ -111,9 +111,9 @@ makeProvider(usm::pool_descriptor poolDescriptor) {
     // Make memory resident on the source device itself plus all peer devices
     // that have explicitly enabled peer access to it.
     zeDeviceHandles.push_back(level_zero_device_handle);
-    for (auto dev :
-         poolDescriptor.hContext->getDevicesWhichCanAccessAllocationsPresentOn(
-             poolDescriptor.hDevice)) {
+    for (auto dev : v2_cast(poolDescriptor.hContext)
+                        ->getDevicesWhichCanAccessAllocationsPresentOn(
+                            common_cast(poolDescriptor.hDevice))) {
       zeDeviceHandles.push_back(dev->ZeDevice);
     }
 
@@ -444,9 +444,10 @@ void ur_usm_pool_handle_t_::changeResidentDevice(ur_device_handle_t hDevice,
                                                  bool isAdding) {
   poolManager.forEachPoolWithDesc([=](const auto &desc, auto pool) {
     if (desc.supportsResidentDevices() && desc.hDevice &&
-        desc.hDevice->ZeDevice == hDevice->ZeDevice) {
+        common_cast(desc.hDevice)->ZeDevice == hDevice->ZeDevice) {
       UR_LOG(INFO, "found {} of srcDevice:{} valid to {} peerDevice:{}",
-             logger::makeStringFromStreamable(desc), desc.hDevice->Id.value(),
+             logger::makeStringFromStreamable(desc),
+             common_cast(desc.hDevice)->Id.value(),
              isAdding ? "add" : "remove", peerDevice->Id.value());
       umf_memory_provider_handle_t hProvider;
       umf_result_t getProviderResult =
@@ -483,7 +484,6 @@ void ur_usm_pool_handle_t_::changeResidentDevice(ur_device_handle_t hDevice,
   });
 }
 
-namespace ur::level_zero::v2 {
 ur_result_t urUSMPoolCreate(
     /// [in] handle of the context object
     ::ur_context_handle_t hContextOpque,

@@ -2367,4 +2367,25 @@ bool ur_context_common_t::isValidDevice(ur_device_handle_t hDevice) const {
   return false;
 }
 
+std::ostream &operator<<(std::ostream &os,
+                         ur_device_handle_t_ const &device_handle) {
+  if (device_handle.Id.has_value()) {
+    return os << device_handle.Id.value();
+  }
+  return os << "NONE";
+}
+
+std::ostream &operator<<(std::ostream &os,
+                         ur_device_handle_t_::PeerStatus peer_status) {
+  switch (peer_status) {
+  case ur_device_handle_t_::PeerStatus::DISABLED:
+    return os << "DISABLED";
+  case ur_device_handle_t_::PeerStatus::ENABLED:
+    return os << "ENABLED";
+  case ur_device_handle_t_::PeerStatus::NO_CONNECTION:
+    return os << "NO_CONNECTION";
+  }
+  return os << "UNKNOWN";
+}
+
 } // namespace ur::level_zero

@@ -54,6 +54,34 @@ ur_result_t urDeviceGetInfo(::ur_device_handle_t hDeviceOpque,
   case UR_DEVICE_INFO_ENQUEUE_HOST_TASK_SUPPORT_EXP:
     return ReturnValue(
         static_cast<ur_bool_t>(hDevice->Platform->ZeHostTaskExt.Supported));
+  case UR_DEVICE_INFO_REUSABLE_EVENTS_SUPPORT_EXP:
+    return ReturnValue(static_cast<ur_bool_t>(true));
+  case UR_DEVICE_INFO_PER_EVENT_PROFILING_SUPPORT_EXP:
+    return ReturnValue(true);
+  case UR_DEVICE_INFO_USM_HOST_ALLOC_REGISTER_SUPPORT_EXP:
+    // Registering existing host memory as a USM host allocation relies on the
+    // external system memory mapping extension being supported by the driver.
+    return ReturnValue(
+        hDevice->Platform->ZeExternalMemoryMappingExtensionSupported);
+  case UR_DEVICE_INFO_IPC_PHYSICAL_MEMORY_SUPPORT_EXP:
+#if defined(__linux__)
+    return ReturnValue(true);
+#else
+    return ReturnValue(false);
+#endif
+  case UR_DEVICE_INFO_IPC_EVENT_SUPPORT_EXP: {
+#if defined(__linux__)
+    constexpr uint32_t MinDriverBuild = 38646;
+    ZeStruct<ze_driver_properties_t> ZeDriverProperties;
+    ZE2UR_CALL(zeDriverGetProperties,
+               (hDevice->Platform->ZeDriver, &ZeDriverProperties));
+    const uint32_t DriverBuild = ZeDriverProperties.driverVersion & 0xFFFF;
+    return ReturnValue(static_cast<ur_bool_t>(hDevice->isBMGOrNewer() &&
+                                              DriverBuild >= MinDriverBuild));
+#else
+    return ReturnValue(false);
+#endif
+  }
   default:
     return ur::level_zero::urDeviceGetInfo(hDeviceOpque, propName, propSize,
                                            propValue, propSizeRet);

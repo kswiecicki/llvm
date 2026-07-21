@@ -11,7 +11,7 @@
 
 #include <unified-runtime/ur_api.h>
 
-#include <level_zero/ze_api.h>
+#include <ze_api.h>
 
 #include "../common/interfaces.hpp"
 #include "command_list_cache.hpp"
