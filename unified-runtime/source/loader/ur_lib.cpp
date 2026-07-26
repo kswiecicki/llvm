@@ -26,6 +26,16 @@
 #include <regex>
 #include <stdlib.h>
 
+// When UMF is linked statically into the same module as the loader, its
+// library destructor finalizes UMF before the loader tears down (see the note
+// in adapters/level_zero/common/adapter.cpp). Layers such as the device
+// sanitizer free UMF-backed allocations during urLoaderTearDown, so the loader
+// holds a umfInit reference for its lifetime to keep UMF's allocation tracker
+// alive until after the layers have been torn down.
+#if defined(UR_STATIC_UMF)
+#include <umf.h>
+#endif
+
 namespace ur_lib {
 ///////////////////////////////////////////////////////////////////////////////
 context_t::context_t() { parseEnvEnabledLayers(); }
@@ -84,6 +94,12 @@ __urdlllocal ur_result_t context_t::Init(
   if (!enabledLayerNames.empty()) {
     initLayers();
   }
+
+#if defined(UR_STATIC_UMF)
+  if (UR_RESULT_SUCCESS == result) {
+    umfInit();
+  }
+#endif
 
   return result;
 }
@@ -204,6 +220,15 @@ ur_result_t urLoaderTearDown() {
     ur_loader::context_t::forceDelete();
     delete context;
   });
+
+#if defined(UR_STATIC_UMF)
+  // Release the reference taken in context_t::Init only once the loader has
+  // actually torn down (release() invokes the deleter on the last reference),
+  // so UMF outlives the layers' teardown-time frees above.
+  if (ret == 0) {
+    umfTearDown();
+  }
+#endif
 
   ur_result_t result =
       ret == 0 ? UR_RESULT_SUCCESS : UR_RESULT_ERROR_UNINITIALIZED;
