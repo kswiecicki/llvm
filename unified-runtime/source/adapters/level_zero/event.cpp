@@ -1560,18 +1560,15 @@ ur_result_t ur_ze_event_list_t::createAndRetainUrZeEventList(
   }
 
   uint32_t TmpListLength = 0;
-  bool CurQueueUnlocked = false;
   ur_event_handle_t PendingMultiDeviceEvent = nullptr;
   ur_event_handle_t PendingRetainedEvent = nullptr;
 
-  // On failure leave *this empty: release every event retained so far, free
-  // the arrays and make sure the caller's lock of CurQueue is held again.
+  // On failure leave *this empty: release every event retained so far and
+  // free the arrays.
   bool Committed = false;
   OnScopeExit Rollback([&]() {
     if (Committed)
       return;
-    if (CurQueueUnlocked)
-      CurQueue->Mutex.lock();
     std::list<ur_event_handle_t> EventsToBeReleased;
     this->Length = TmpListLength;
     collectEventsForReleaseAndDestroyUrZeEventList(EventsToBeReleased);
@@ -1634,6 +1631,13 @@ ur_result_t ur_ze_event_list_t::createAndRetainUrZeEventList(
         auto CurQueueDevice = CurQueue->Device;
         std::optional<std::unique_lock<ur_shared_mutex>> QueueLock =
             std::nullopt;
+        // Re-acquires the CurQueue lock on every exit from this scope.
+        OnScopeExit RelockOnExit([&]() {
+          if (QueueLock.has_value()) {
+            QueueLock.reset();
+            CurQueue->Mutex.lock();
+          }
+        });
         // The caller of createAndRetainUrZeEventList must already hold
         // a lock of the CurQueue. However, if the CurQueue is different
         // then the Event's Queue, we need to drop that lock and
@@ -1646,7 +1650,6 @@ ur_result_t ur_ze_event_list_t::createAndRetainUrZeEventList(
         // of this scope.
         if (Queue && Queue != CurQueue) {
           CurQueue->Mutex.unlock();
-          CurQueueUnlocked = true;
           QueueLock = std::unique_lock<ur_shared_mutex>(Queue->Mutex);
         }
 
@@ -1756,12 +1759,6 @@ ur_result_t ur_ze_event_list_t::createAndRetainUrZeEventList(
           this->UrEventList[TmpListLength]->RefCount.retain();
         }
         TmpListLength += 1;
-
-        if (QueueLock.has_value()) {
-          QueueLock.reset();
-          CurQueue->Mutex.lock();
-          CurQueueUnlocked = false;
-        }
       }
     }
 
